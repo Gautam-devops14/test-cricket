@@ -1,0 +1,285 @@
+/* -------------------------------------- */
+/* BASIC LAYOUT & FONT */
+/* -------------------------------------- */
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #004d40;
+    margin-bottom: 25px;
+    font-weight: 700;
+    border-bottom: 3px solid #e0ffe0;
+    padding-bottom: 10px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* -------------------------------------- */
+/* SETUP & START SCREEN (History) */
+/* -------------------------------------- */
+
+#setup-area, #start-screen {
+    padding: 15px;
+    border: 1px dashed #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+#setup-area input {
+    width: calc(50% - 10px);
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+#start-screen h2 {
+    color: #004d40;
+    font-size: 1.4em;
+    margin-top: 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+/* --- MATCH LIST STYLING (FIXED) --- */
+.match-item-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.match-select-btn {
+    flex-grow: 1;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 15px;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #333;
+}
+
+.match-select-btn:hover {
+    background-color: #f1f8e9;
+}
+
+.match-delete-btn {
+    background: #ffebee;
+    color: #c62828;
+    border: none;
+    border-left: 1px solid #ffcdd2;
+    padding: 0 20px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9rem;
+    height: 100%;
+    min-height: 50px; /* Ensures it matches height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.match-delete-btn:hover {
+    background: #ef9a9a;
+    color: white;
+}
+
+/* -------------------------------------- */
+/* SCORE DISPLAY */
+/* -------------------------------------- */
+
+.score-display {
+    text-align: center;
+    padding: 25px 0;
+    background: #004d40;
+    color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.team-label {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.main-score {
+    font-size: 3.5em;
+    font-weight: 900;
+    letter-spacing: -2px;
+    line-height: 1;
+    margin: 10px 0;
+}
+
+.overs {
+    font-size: 1.1em;
+    opacity: 0.8;
+}
+
+/* -------------------------------------- */
+/* STATUS & LEAD/TRAIL */
+/* -------------------------------------- */
+
+#match-status {
+    text-align: center;
+    font-size: 1.2em;
+    color: #333;
+    padding: 10px 0;
+    margin-top: 15px;
+    border-bottom: 2px solid #ddd;
+}
+
+/* -------------------------------------- */
+/* CONTROLS (BUTTONS) */
+/* -------------------------------------- */
+
+.controls {
+    text-align: center;
+}
+
+.runs-controls button {
+    background: #00796b;
+    color: white;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    border: 2px solid #004d40;
+    margin: 4px;
+    cursor: pointer;
+    transition: transform 0.1s, background-color 0.1s;
+}
+
+.runs-controls button:active {
+    transform: scale(0.95);
+    background-color: #004d40;
+}
+
+.extras-controls {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.wicket-btn {
+    background: #c62828;
+    color: white;
+    font-size: 1.2em;
+    font-weight: bold;
+    padding: 12px 25px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+.extra-btn {
+    background: #ffb300;
+    color: #333;
+    font-weight: bold;
+    padding: 12px 15px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+.admin-controls {
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.declare-btn {
+    display: block;
+    width: 100%;
+    border-radius: 6px;
+    background: #00796b;
+    color: #fff;
+    padding: 12px;
+    font-size: 1em;
+    border: none;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background-color 0.2s;
+}
+
+.declare-btn:hover {
+    background-color: #004d40;
+}
+
+/* Scorecard Tables */
+.score-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+    background: #fff;
+    margin-bottom: 10px;
+}
+
+.score-table th, .score-table td {
+    padding: 8px 5px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+
+.score-table th {
+    background-color: #f2f2f2;
+    color: #333;
+    font-weight: bold;
+}
+
+.score-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.score-table th:first-child, 
+.score-table td:first-child {
+    text-align: left;
+    width: 40%;
+    font-weight: 500;
+}
+
+.ball-bubble {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.8em;
+    border: 1px solid #ccc;
+    color: #333;
+}
+
+.ball-w { background-color: #ffcdd2; color: #c62828; border-color: #c62828; }
+.ball-4 { background-color: #e0f7fa; color: #006064; border-color: #006064; }
+.ball-6 { background-color: #e1bee7; color: #4a148c; border-color: #4a148c; }

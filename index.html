@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Cricket Scorer</title>
+    <link rel="stylesheet" href="main.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Test Cricket Scoreboard</h1>
+
+        <div id="start-screen">
+            
+            <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #90caf9;">
+                <h3 style="margin-top:0; color:#1565c0;">Player Management</h3>
+                <div style="display:flex; gap:10px; margin-bottom:10px; flex-wrap:wrap;">
+                    <input type="text" id="new-player-name" placeholder="Enter Player Name" style="padding:8px; border-radius:4px; border:1px solid #ccc; flex-grow:1;">
+                    <select id="new-player-role" style="padding:8px; border-radius:4px; border:1px solid #ccc;">
+                        <option value="Batsman">Batsman</option>
+                        <option value="Bowler">Bowler</option>
+                        <option value="All-Rounder">All-Rounder</option>
+                    </select>
+                </div>
+                <button onclick="addNewPlayerToDB()" style="background:#1565c0; color:white; border:none; padding:8px 15px; border-radius:4px; cursor:pointer; width:100%;">+ Add Player to Database</button>
+            </div>
+
+            <button class="declare-btn" style="margin-bottom: 20px;" onclick="showNewMatchSetup()">+ Create New Match</button>
+            <h2>Saved Matches:</h2>
+            <div id="match-list" style="margin-top: 15px;">
+                <p>Loading matches...</p>
+            </div>
+        </div>
+        
+        <div id="setup-area" class="hidden">
+            <h3>Match Setup</h3>
+            <input type="text" id="team1-name" placeholder="Home Team Name" value="Team A">
+            <input type="text" id="team2-name" placeholder="Away Team Name" value="Team B">
+            
+            <label style="display:block; margin-top:10px; font-weight:bold;">Match Settings:</label>
+            <input type="text" id="group-name" placeholder="Group Name (e.g. SundayLeague)" value="Default">
+            <input type="number" id="wicket-limit" placeholder="Max Wickets (Default: 10)" value="10">
+            
+            <button onclick="startGame()" style="margin-top:15px;">Start Match</button>
+            <button onclick="showStartScreen()" style="background-color: #555; margin-left: 10px;">Back to History</button>
+        </div>
+
+        <div id="scoreboard" class="hidden">
+            <h2 id="match-status">Match Status: 1st Inning</h2>
+            
+            <div id="situation-display" style="background: #fff3cd; color: #856404; padding: 12px; border-radius: 5px; text-align: center; margin-bottom: 15px; font-weight: bold; border: 1px solid #ffeeba; font-size: 1.1em;">
+                Match Started
+            </div>
+
+            <div class="score-display">
+                <div class="team-label" id="batting-team-label">Team A</div>
+                <div class="main-score">
+                    <span id="score">0</span> / <span id="wickets">0</span>
+                </div>
+                <div class="overs">
+                    Overs: <span id="overs">0.0</span>
+                    <span style="font-size:0.7em; margin-left:10px; color:#a5d6a7;">(CRR: <span id="crr-display">0.00</span>)</span>
+                </div>
+                <div style="margin-top:5px; font-size:0.9em; opacity:0.9; border-top:1px solid rgba(255,255,255,0.3); padding-top:5px;" id="extras-display">
+                    Extras: 0 (wd 0, nb 0)
+                </div>
+            </div>
+
+            <div id="this-over-container" style="text-align: center; margin: 10px 0;">
+                <span style="font-size: 0.8em; color: #555; text-transform: uppercase;">This Over:</span>
+                <div id="this-over-balls" style="display: flex; justify-content: center; gap: 5px; margin-top: 5px; min-height: 30px;"></div>
+            </div>
+
+            <div class="player-controls" style="text-align:center; background:#e0ffe0; padding:10px; margin:15px 0; border-radius:8px; border: 1px dashed #004d40;">
+                <div style="margin-bottom: 10px; font-size: 0.9em;">
+                    <label><input type="checkbox" id="two-batter-mode" onchange="toggleBatterMode()"> Enable Striker & Non-Striker</label>
+                </div>
+                <div style="display:flex; flex-direction: column; gap: 8px;">
+                    <div style="display:flex; gap:5px; justify-content: center;">
+                        <input type="text" id="batsman-name" list="saved-players-list" placeholder="Striker Name *" style="width:45%; padding:6px; border: 1px solid #ccc;">
+                        <input type="text" id="non-striker-name" list="saved-players-list" placeholder="Non-Striker Name *" style="width:45%; padding:6px; display:none; border: 1px solid #ccc;">
+                    </div>
+                    <div style="display:flex; gap:5px; justify-content: center;">
+                        <input type="text" id="bowler-name" list="saved-players-list" placeholder="Current Bowler *" style="width:70%; padding:6px; border: 1px solid #ccc;">
+                        
+                        <datalist id="saved-players-list"></datalist>
+                        
+                        <button onclick="updatePlayerNames()" style="background:#004d40; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer;">Set</button>
+                    </div>
+                    <div id="swap-container" style="display:none; margin-top:5px;">
+                        <button onclick="swapStrikers(true)" style="font-size:0.8em; background:#fff; border:1px solid #004d40; color:#004d40; cursor:pointer; padding:2px 8px; border-radius:4px;">⇄ Swap Ends</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <div class="runs-controls">
+                    <button onclick="addRuns(0)">0</button>
+                    <button onclick="addRuns(1)">1</button>
+                    <button onclick="addRuns(2)">2</button>
+                    <button onclick="addRuns(3)">3</button>
+                    <button onclick="addRuns(4)">4</button>
+                    <button onclick="addRuns(6)">6</button>
+                </div>
+                <div class="extras-controls">
+                    <button class="wicket-btn" onclick="addWicket()">WICKET</button>
+                    <button class="extra-btn" onclick="addRuns(1, 'wd')">WD</button>
+                    <button class="extra-btn" onclick="addRuns(1, 'nb')">NB</button>
+                </div>
+            </div>
+
+            <div id="detailed-scorecard" style="margin-top: 20px;">
+                <h4 style="background: #004d40; color: white; padding: 5px; margin: 0; border-radius: 4px 4px 0 0;">Batting (Live)</h4>
+                <table class="score-table">
+                    <thead><tr><th style="text-align: left;">Batter</th><th>R</th><th>B</th><th>4s</th><th>6s</th><th>SR</th></tr></thead>
+                    <tbody id="batting-tbody"></tbody>
+                </table>
+
+                <h4 style="background: #004d40; color: white; padding: 5px; margin: 15px 0 0 0; border-radius: 4px 4px 0 0;">Bowling (Live)</h4>
+                <table class="score-table">
+                    <thead><tr><th style="text-align: left;">Bowler</th><th>O</th><th>R</th><th>W</th><th>ECO</th></tr></thead>
+                    <tbody id="bowling-tbody"></tbody>
+                </table>
+            </div>
+
+            <div id="full-match-history" style="margin-top: 40px; border-top: 4px solid #004d40; padding-top: 15px;">
+                <h3 style="text-align: center; color: #004d40; text-transform: uppercase; letter-spacing: 1px;">Match Scorecard</h3>
+                <div id="history-container"></div>
+            </div>
+
+            <div class="admin-controls" style="margin-top: 20px;">
+                <button class="declare-btn" onclick="triggerDeclare()">Declare / End Inning</button>
+                <button class="declare-btn" style="background-color: #5cb85c; margin-top:10px;" onclick="showStartScreen()">Back to History</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="new-batsman-modal" class="hidden" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); display:flex; justify-content:center; align-items:center; z-index:4000;">
+        <div style="background:white; padding:25px; border-radius:10px; width:85%; max-width:400px; text-align:center; border: 2px solid #c62828;">
+            <h2 style="color:#c62828; margin-top:0;">Wicket Down! ☝️</h2>
+            <p style="font-size:1.1em; margin-bottom:20px;">Who is the new batsman?</p>
+            <input type="text" id="new-batsman-input" list="saved-players-list" placeholder="Enter New Batsman Name" style="width:100%; padding:12px; margin-bottom:20px; font-size:1.1em; border:1px solid #ccc; border-radius:4px;">
+            <button onclick="confirmNewBatsman()" style="background:#c62828; color:white; padding:12px 20px; border:none; border-radius:5px; font-size:1.1em; width:100%; cursor:pointer;">Confirm Player</button>
+        </div>
+    </div>
+
+    <div id="next-bowler-modal" class="hidden" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); display:flex; justify-content:center; align-items:center; z-index:3000;">
+        <div style="background:white; padding:25px; border-radius:10px; width:85%; max-width:400px; text-align:center; border: 2px solid #004d40;">
+            <h2 style="color:#004d40; margin-top:0;">Over Complete!</h2>
+            <p style="font-size:1.1em; margin-bottom:20px;">Select next bowler:</p>
+            <input type="text" id="next-bowler-input" list="saved-players-list" placeholder="Enter New Bowler Name" style="width:100%; padding:12px; margin-bottom:20px; font-size:1.1em; border:1px solid #ccc; border-radius:4px;">
+            <button onclick="confirmNextBowler()" style="background:#004d40; color:white; padding:12px 20px; border:none; border-radius:5px; font-size:1.1em; width:100%; cursor:pointer;">Start Next Over</button>
+        </div>
+    </div>
+
+    <div id="custom-alert-modal" class="hidden" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); display:flex; justify-content:center; align-items:center; z-index:5000;">
+        <div style="background:white; padding:20px; border-radius:8px; width:80%; max-width:300px; text-align:center; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+            <h3 id="alert-title" style="margin-top:0; color:#333;">Notice</h3>
+            <p id="alert-message" style="margin:15px 0; color:#555; font-size:1.1em;">Message goes here.</p>
+            <button onclick="closeCustomAlert()" style="background:#333; color:white; padding:8px 20px; border:none; border-radius:4px; cursor:pointer;">OK</button>
+        </div>
+    </div>
+
+    <div id="custom-confirm-modal" class="hidden" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); display:flex; justify-content:center; align-items:center; z-index:5000;">
+        <div style="background:white; padding:20px; border-radius:8px; width:80%; max-width:300px; text-align:center; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+            <h3 style="margin-top:0; color:#333;">Confirm Action</h3>
+            <p id="confirm-message" style="margin:15px 0; color:#555; font-size:1.1em;">Are you sure?</p>
+            <div style="display:flex; justify-content:center; gap:10px;">
+                <button id="confirm-yes-btn" style="background:#c62828; color:white; padding:8px 20px; border:none; border-radius:4px; cursor:pointer;">Yes</button>
+                <button onclick="closeCustomConfirm()" style="background:#ccc; color:#333; padding:8px 20px; border:none; border-radius:4px; cursor:pointer;">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="toast" class="hidden" style="position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#333; color:white; padding:10px 20px; border-radius:20px; font-size:0.9em; opacity:0.9; z-index:2000;"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyB6vuEGRcbE7MfdSpt2qR3YC5Oo6F_H1m4",
+            authDomain: "cricket-gautam.firebaseapp.com",
+            projectId: "cricket-gautam",
+            storageBucket: "cricket-gautam.firebasestorage.app",
+            messagingSenderId: "445080387402",
+            appId: "1:445080387402:web:2858819b838c79a6b1cbb3",
+            measurementId: "G-N5Z0PKD6MR",
+            databaseURL: "https://cricket-gautam-default-rtdb.asia-southeast1.firebasedatabase.app"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+    </script>
+    <script src="main.js"></script>
+</body>
+</html>
